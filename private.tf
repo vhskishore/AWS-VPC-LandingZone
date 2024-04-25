@@ -11,7 +11,7 @@ resource "aws_route_table_association" "rt_private_a" {
 resource "aws_route" "route_pa" {
   route_table_id         = aws_route_table.private_rt_a.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat-gw-2a-public.id
+  nat_gateway_id         = aws_nat_gateway.ngw-1a.id
 }
 
 resource "aws_route_table" "rt_private_b" {
@@ -25,13 +25,13 @@ resource "aws_route_table_association" "rt_assoc_private_b" {
 }
 
 resource "aws_route" "route_pb" {
-  route_table_id         = aws_route.table.rt_private_b.id
+  route_table_id         = aws_route_table.rt_private_b.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat-gw-2b-public.id
+  nat_gateway_id         = aws_nat_gateway.ngw-1b.id
 }
 
 resource "aws_route_table" "rt_private_c" {
-  vpc_id = aws_vpc.amc-vpc.id
+  vpc_id = aws_vpc.vpc.id
   tags   = merge(var.tags, {})
 }
 
@@ -43,13 +43,13 @@ resource "aws_route_table_association" "rt_assoc_private_c" {
 resource "aws_route" "route_pc" {
   route_table_id         = aws_route_table.rt_private_c.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat-gw-2c-public.id
+  nat_gateway_id         = aws_nat_gateway.ngw-1a.id
 }
 
 resource "aws_subnet" "private_a" {
-  vpc_id                 = aws_vpc.amc-vpc.id
+  vpc_id                 = aws_vpc.vpc.id
   tags                   = merge(var.tags, {})
-  map_public_ip_on_lunch = false
+  map_public_ip_on_launch = false
   cidr_block             = var.private_subnets.a
   availability_zone      = "us-east-1a"
 }
@@ -66,6 +66,6 @@ resource "aws_subnet" "private_c" {
   vpc_id                  = aws_vpc.vpc.id
   tags                    = merge(var.tags, {})
   map_public_ip_on_launch = false
-  cidr_block              = var.private_subnet.c
+  cidr_block              = var.private_subnets.c
   availability_zone       = "us-east-1c"
 }
